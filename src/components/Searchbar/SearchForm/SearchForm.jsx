@@ -6,9 +6,9 @@ export class SearchForm extends Component {
     inputRequest: '',
   };
 
-  onInputUpdate = inputRequest => {
+  onInputUpdate = ({ target }) => {
     this.setState({
-      inputRequest: inputRequest.target.value,
+      inputRequest: target.value,
     });
   };
 
@@ -31,6 +31,7 @@ export class SearchForm extends Component {
           autoFocus
           placeholder="Search images and photos"
           onChange={this.onInputUpdate}
+          value={this.state.inputRequest}
         />
       </form>
     );

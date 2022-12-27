@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { SearchBar } from './Searchbar/Searchbar';
+import { ImageGallery } from './ImageGallery/ImageGallery';
 
 export class App extends Component {
   state = {
@@ -37,11 +38,11 @@ export class App extends Component {
       <div>
         <SearchBar onSubmit={this.onInputSubmit} />
 
-        {/* <ImageGallery
+        <ImageGallery
           currentPage={this.state.currentPage}
           inputRequest={this.state.inputRequest}
           onLoadMore={this.onLoadMoreClick}
-        /> */}
+        />
 
         {/* <button type="button" onClick={this.toggleModal}>
           Open modal
