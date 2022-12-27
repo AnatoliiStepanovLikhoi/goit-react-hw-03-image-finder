@@ -1,7 +1,19 @@
 import { Component } from 'react';
+import { Notify } from 'notiflix';
 // import PropTypes from 'prop-types';
 // import { MagnifyingGlass } from 'react-loader-spinner';
 import { fetchData } from 'components/Utils/fetchApi';
+
+// Notify.init({
+//   distance: '20px',
+//   cssAnimationStyle: 'from-top',
+//   fontSize: '16px',
+//   // useFontAwesome: true,
+//   timeout: 2000,
+//   backOverlay: true,
+//   // plainText: false,
+//   clickToClose: true,
+// });
 
 export class ImageGallery extends Component {
   state = {
@@ -49,6 +61,13 @@ export class ImageGallery extends Component {
   }
 
   render() {
+    const { status, galleryHits, totalHits } = this.state;
+    const { currentPage, onLoadMore } = this.props;
+
+    if (status === 'idle') {
+      Notify.success('lets start');
+    }
+
     return <ul></ul>;
   }
 }
