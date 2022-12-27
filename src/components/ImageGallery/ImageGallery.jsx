@@ -61,8 +61,9 @@ export class ImageGallery extends Component {
   }
 
   render() {
-    const { status, galleryHits, totalHits } = this.state;
-    const { currentPage, onLoadMore } = this.props;
+    const { status } = this.state;
+    // const { status, galleryHits, totalHits } = this.state;
+    // const { currentPage, onLoadMore } = this.props;
 
     if (status === 'idle') {
       Notify.success('lets start');
