@@ -1,19 +1,21 @@
 import { Component } from 'react';
 import { Notify } from 'notiflix';
 // import PropTypes from 'prop-types';
-// import { MagnifyingGlass } from 'react-loader-spinner';
 import { fetchData } from 'components/Utils/fetchApi';
 
-// Notify.init({
-//   distance: '20px',
-//   cssAnimationStyle: 'from-top',
-//   fontSize: '16px',
-//   // useFontAwesome: true,
-//   timeout: 2000,
-//   backOverlay: true,
-//   // plainText: false,
-//   clickToClose: true,
-// });
+import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
+import { Loader } from 'components/Loader/Loader';
+
+Notify.init({
+  distance: '20px',
+  cssAnimationStyle: 'from-top',
+  fontSize: '16px',
+  // useFontAwesome: true,
+  timeout: 2000,
+  backOverlay: true,
+  // plainText: false,
+  clickToClose: true,
+});
 
 export class ImageGallery extends Component {
   state = {
@@ -22,12 +24,19 @@ export class ImageGallery extends Component {
     totalHits: 0,
   };
 
+  componentDidMount() {
+    if (this.state.status === 'idle') {
+      // console.log('render');
+      return Notify.success('Please, fill your request!');
+    }
+  }
+
   async componentDidUpdate(prevProps, prevState) {
     // console.log(this.props);
 
     const { currentPage, inputRequest } = this.props;
 
-    if (prevProps.currentPage === currentPage && prevProps.inputRequest) {
+    if (prevProps.inputRequest === inputRequest) {
       return;
     }
 
@@ -61,14 +70,40 @@ export class ImageGallery extends Component {
   }
 
   render() {
-    const { status } = this.state;
-    // const { status, galleryHits, totalHits } = this.state;
-    // const { currentPage, onLoadMore } = this.props;
+    // const { status } = this.state;
+    const { status, galleryHits, totalHits } = this.state;
+    const { currentPage, onLoadMore } = this.props;
 
-    if (status === 'idle') {
-      Notify.success('lets start');
+    const remainedtotalHits = totalHits - currentPage * 12;
+
+    // if (status === 'idle' && totalHits === 0) {
+    //   console.log('render');
+    //   return Notify.success('Please, fill your request!');
+    // }
+
+    if (status === 'pending') {
+      return <Loader />;
     }
 
-    return <ul></ul>;
+    if (status === 'failed') {
+      return Notify.failure('Sorry, we found no images(');
+    }
+
+    if (status === 'resolved') {
+      return (
+        <ul>
+          {galleryHits.map(hit => (
+            <ImageGalleryItem
+              key={hit.id}
+              basicImage={hit.webformatURL}
+              largeImage={hit.largeImageURL}
+              tag={hit.tags}
+            />
+          ))}
+          <ImageGalleryItem galleryHits={galleryHits} />
+          {/* {remainedtotalHits > 0 && <LoadMoreButton onLoadMore={onLoadMore} />} */}
+        </ul>
+      );
+    }
   }
 }

@@ -14,6 +14,7 @@ export class SearchForm extends Component {
 
   onInputSubmit = event => {
     event.preventDefault();
+    console.log('searchform', this.state.inputRequest);
     this.props.onSubmit(this.state.inputRequest);
   };
 
