@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 import styles from './Modal.module.css';
 
-const modalRoot = document.querySelector('#modal-root');
+const portal = document.querySelector('#portal');
 
 export class Modal extends Component {
   handleKeyDown = e => {
@@ -35,14 +36,24 @@ export class Modal extends Component {
   }
 
   render() {
+    const { largeImage, tag } = this.props;
+
     return createPortal(
       <div
         className={styles.Modal__backdrop}
         onClick={this.handleBackdropClick}
       >
-        <div className={styles.Modal__content}>{this.props.children}</div>
+        <div className={styles.Modal__content}>
+          <img src={largeImage} alt={tag} />
+        </div>
       </div>,
-      modalRoot
+      portal
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  largeImage: PropTypes.string.isRequired,
+  tag: PropTypes.string.isRequired,
+};

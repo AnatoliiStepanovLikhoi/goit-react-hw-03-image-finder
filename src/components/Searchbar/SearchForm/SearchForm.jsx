@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 
+import { OnSearchButton } from 'components/Button/Button';
+import styles from './SearchForm.module.css';
+
 export class SearchForm extends Component {
   state = {
     inputRequest: '',
@@ -20,13 +23,10 @@ export class SearchForm extends Component {
 
   render() {
     return (
-      <form className="form" onSubmit={this.onInputSubmit}>
-        <button type="submit" className="button">
-          <span className="button-label">Search</span>
-        </button>
-
+      <form className={styles.searchForm} onSubmit={this.onInputSubmit}>
+        <OnSearchButton />
         <input
-          className="input"
+          className={styles.searchInput}
           type="text"
           autoComplete="off"
           autoFocus

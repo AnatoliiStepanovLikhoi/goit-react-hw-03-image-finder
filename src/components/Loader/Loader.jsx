@@ -6,8 +6,8 @@ export const Loader = () => {
     <div className={styles.searchingGlass}>
       <MagnifyingGlass
         visible={true}
-        height="200"
-        width="200"
+        height="100"
+        width="100"
         ariaLabel="MagnifyingGlass-loading"
         wrapperStyle={{}}
         wrapperClass="MagnifyingGlass-wrapper"

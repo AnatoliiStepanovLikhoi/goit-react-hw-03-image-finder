@@ -1,19 +1,18 @@
 import { Component } from 'react';
 import { Notify } from 'notiflix';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { fetchData } from 'components/Utils/fetchApi';
 
-import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryList } from './ImageGalleryList/ImageGalleryList';
 import { Loader } from 'components/Loader/Loader';
+import { LoadMoreButton } from 'components/LoadMoreButton/LoadMoreButton';
 
 Notify.init({
   distance: '20px',
   cssAnimationStyle: 'from-top',
   fontSize: '16px',
-  // useFontAwesome: true,
   timeout: 2000,
   backOverlay: true,
-  // plainText: false,
   clickToClose: true,
 });
 
@@ -36,8 +35,12 @@ export class ImageGallery extends Component {
 
     const { currentPage, inputRequest } = this.props;
 
-    if (prevProps.inputRequest === inputRequest) {
+    if (
+      prevProps.inputRequest === inputRequest &&
+      prevProps.currentPage === currentPage
+    ) {
       return;
+      // Notify.info('Caution, please fill the new request!');
     }
 
     this.setState({
@@ -71,9 +74,9 @@ export class ImageGallery extends Component {
 
   render() {
     // const { status } = this.state;
+
     const { status, galleryHits, totalHits } = this.state;
     const { currentPage, onLoadMore } = this.props;
-
     const remainedtotalHits = totalHits - currentPage * 12;
 
     // if (status === 'idle' && totalHits === 0) {
@@ -81,29 +84,35 @@ export class ImageGallery extends Component {
     //   return Notify.success('Please, fill your request!');
     // }
 
-    if (status === 'pending') {
+    if (status === 'pending' && totalHits === 0) {
       return <Loader />;
+    }
+
+    if (status === 'rejected') {
+      return Notify.failure(
+        'Sorry, something went wrong, please try again later!'
+      );
     }
 
     if (status === 'failed') {
       return Notify.failure('Sorry, we found no images(');
     }
 
-    if (status === 'resolved') {
+    if (status === 'resolved' || (status === 'pending' && totalHits > 0)) {
       return (
-        <ul>
-          {galleryHits.map(hit => (
-            <ImageGalleryItem
-              key={hit.id}
-              basicImage={hit.webformatURL}
-              largeImage={hit.largeImageURL}
-              tag={hit.tags}
-            />
-          ))}
-          <ImageGalleryItem galleryHits={galleryHits} />
-          {/* {remainedtotalHits > 0 && <LoadMoreButton onLoadMore={onLoadMore} />} */}
-        </ul>
+        <>
+          <ImageGalleryList galleryHits={galleryHits} />
+          {remainedtotalHits > 0 && (
+            <LoadMoreButton onLoadMore={onLoadMore} status={status} />
+          )}
+        </>
       );
     }
   }
 }
+
+ImageGallery.propTypes = {
+  onLoadMore: PropTypes.func.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  inputRequest: PropTypes.string.isRequired,
+};
